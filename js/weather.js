@@ -15,15 +15,6 @@ function putRequest(url,state) {
   });
 }
 
-function getWeatherData() {
-	var url = 'http://api.openweathermap.org/data/2.5/weather?q=amsterdam,nl&units=metric'; 
-	getRequest(url, function(data){
-		console.log(data);
-        console.log('sunrise:', new Date(data.sys.sunrise*1000));
-        console.log('sunset:', new Date(data.sys.sunset*1000));
-	});
-}
-
 function getLampState(){
 	var url = 'http://192.168.1.10/api/newdeveloper/lights/1'
 	getRequest(url, function(data) {

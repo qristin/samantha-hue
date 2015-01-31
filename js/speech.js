@@ -5,7 +5,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
 var recognition = new webkitSpeechRecognition();
 recognition.lang = "nl-NL";
-recognition.continuous = true;
+recognition.continuous = false;
 recognition.interimResults = true;
 
 var source = Rx.Observable.fromEvent(recognition, "result");
@@ -19,12 +19,20 @@ source.map(function(event){
 	// are we intersted in this?
 	return transcript.indexOf("weer in") > -1
 })
+.throttleWithTimeout(20) // ms
 .map(function(transcript){
-	//exract city
-	return transcript.substring(7 + transcript.indexOf("weer in")).trim();
+	console.log('transcript:', transcript);
+	//extract city
+	var city = transcript.substring(7 + transcript.indexOf("weer in")).toLowerCase();
+	city = city.replace("wat", "");
+	city = city.replace("is", "");
+	city = city.replace("het", "");
+	city = city.replace("weer", "");
+	city = city.replace("in", "");
+	return city.trim();
 })
 .filter(function(city){
-	return city.trim() != '';//no empty recognised 'weer in' strings
+	return city != '';//no empty recognised 'weer in' strings
 })
 .distinctUntilChanged()//dont care about sequential amsterdams
 .throttleFirst(4000) // milliseconds
@@ -64,6 +72,11 @@ recognition.onerror = function(event){
 recognition.onend = function(){
 	console.log('NANANA IM NOT LISTENING ANYMORE!');
 };
+
+   recognition.onspeechend = function(event) {
+        console.log('onspeechend', event);
+      };
+      
 
 function getWeatherData(city){
 	console.log("going to find weather for ", city);
