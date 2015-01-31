@@ -74,10 +74,16 @@ recognition.onstart = function(){
 };
 
 recognition.onerror = function(event){
+	$("#error").show();
+	$('#weather').hide();
+	$('#city').hide();	
 	console.error("something error happen", event);
 };
 
 recognition.onend = function(){
+	$("#error").show();
+	$('#weather').hide();
+	$('#city').hide();
 	console.log('NANANA IM NOT LISTENING ANYMORE!');
 };
 
@@ -92,7 +98,7 @@ function getWeatherData(city){
 	return $.get('http://api.openweathermap.org/data/2.5/weather?q='+city+'&units=metric')
 	.then(function(data){
 		if(!data || !data.weather)
-			return "sun";
+			return "";
 
 		if(data.weather[0].main.toLowerCase().indexOf("rain") > -1)
 			return "rain";
