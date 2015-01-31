@@ -5,30 +5,38 @@ if (!('webkitSpeechRecognition' in window)) {
 
 var recognition = new webkitSpeechRecognition();
 recognition.lang = "nl-NL";
-recognition.continuous = false;
+recognition.continuous = true;
 recognition.interimResults = true;
+recognition.maxAlternatives = 1; //default 1
 
 var source = Rx.Observable.fromEvent(recognition, "result");
 source.map(function(event){
 	console.log("got something?");
 	var totalTranscripts = event.results.length;
 	var transcript = event.results[totalTranscripts-1][0].transcript;
+
+/*
+	event.results.filter(function(transcriptionResult){
+		return transcriptionResult.
+
+	});
+*/
 	return transcript;
 })
 .filter(function(transcript){
 	// are we intersted in this?
-	return transcript.indexOf("weer in") > -1
+	return transcript.lastIndexOf("weer in") > -1
 })
 .throttleWithTimeout(20) // ms
 .map(function(transcript){
-	console.log('transcript:', transcript);
 	//extract city
-	var city = transcript.substring(7 + transcript.indexOf("weer in")).toLowerCase();
+	var city = transcript.substring(7 + transcript.lastIndexOf("weer in")).toLowerCase();
 	city = city.replace("wat", "");
 	city = city.replace("is", "");
 	city = city.replace("het", "");
 	city = city.replace("weer", "");
 	city = city.replace("in", "");
+	console.log('city:', city);
 	return city.trim();
 })
 .filter(function(city){
@@ -40,7 +48,9 @@ source.map(function(event){
 .subscribe(
 	function(weather){
 		console.log("weather:",weather);
-		
+	recognition.continuous = false;
+	recognition.continuous = true;
+
 		//go and do the light stuff
 		if(weather == "sun"){
 			setSunny();
@@ -59,8 +69,6 @@ source.map(function(event){
 		console.error(error);
 	});
 
-
-
 recognition.onstart = function(){
 	console.log("starting to listen...");
 };
@@ -76,7 +84,7 @@ recognition.onend = function(){
    recognition.onspeechend = function(event) {
         console.log('onspeechend', event);
       };
-      
+
 
 function getWeatherData(city){
 	console.log("going to find weather for ", city);
