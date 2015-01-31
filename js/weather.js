@@ -1,12 +1,6 @@
-console.log("Weather");
-
 var normalState;
-
-
-getWeatherData();
-getLampState();
-setCloudy();
-
+//getWeatherData();
+//getLampState();
 
 function getRequest(url, callback) {
 	$.get(url, callback);
@@ -86,7 +80,3 @@ function setRainy() {
 	}
 	setTimeout(setNormalState,1000);		
 }
-
-
-
-
