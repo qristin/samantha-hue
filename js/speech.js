@@ -31,12 +31,12 @@ source.map(function(event){
 .map(function(transcript){
 	//extract city
 	var city = transcript.substring(7 + transcript.lastIndexOf("weer in")).toLowerCase();
-	city = city.replace("wat", "");
+	/* city = city.replace("wat", "");
 	city = city.replace("is", "");
 	city = city.replace("het", "");
 	city = city.replace("weer", "");
-	city = city.replace("in", "");
-	console.log('city:', city);
+	city = city.replace("in", "");*/
+	console.log('transcript', transcript, 'city:', city);
 	return city.trim();
 })
 .filter(function(city){
