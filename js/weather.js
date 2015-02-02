@@ -1,6 +1,4 @@
 var normalState;
-//getWeatherData();
-//getLampState();
 
 function getRequest(url, callback) {
 	$.get(url, callback);
@@ -15,7 +13,7 @@ function putRequest(url,state) {
   });
 }
 
-function getLampState(){
+function getInitialLampState(){
 	var url = 'http://192.168.1.10/api/newdeveloper/lights/1'
 	getRequest(url, function(data) {
 		normalState = data;
@@ -35,6 +33,7 @@ function setLightLamp(lamp,state) {
 
 
 function setNormalState() {
+	// TODO - use the getInitialLampState to store original settings so we can push those back to the lights afterwards instead.
 	var state = '{"on":true,"bri":100,"sat":0,"hue":12750}';
 	setLightGroup(state);
 }
@@ -67,7 +66,6 @@ function setRainy() {
 		setLightLamp(1,lampStateB);
 		setLightLamp(2,lampStateB);
 		count++;
-		console.log(count);
 	}
 	setTimeout(setNormalState,1000);		
 }

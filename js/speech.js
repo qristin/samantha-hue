@@ -1,5 +1,5 @@
 if (!('webkitSpeechRecognition' in window)) {
-  alert('hallo, je hebt geen webkitSpeechRecognition beschikbaar. upgrade je browser ');
+  alert('This demo only works in a relative new version of Chrome.');
 }
 
 
@@ -7,44 +7,48 @@ var recognition = new webkitSpeechRecognition();
 recognition.lang = "nl-NL";
 recognition.continuous = true;
 recognition.interimResults = true;
-recognition.maxAlternatives = 1; //default 1
+recognition.maxAlternatives = 1; //default 1, don't care in more
 
-var source = Rx.Observable.fromEvent(recognition, "result");
+var source = Rx.Observable.fromEvent(recognition, "result");//wire the onresult event as an observable stream
 source.map(function(event){
-	console.log("got something?");
-	var totalTranscripts = event.results.length;
-	var transcript = event.results[totalTranscripts-1][0].transcript;
+	console.log("recognized something...");
 
+	/*
+		the results contain all previous transcriptions 
+		thus we take the last one. 
+	*/
+	var lastResultIndex = event.results.length - 1;
+	var bestTranscriptionIndex = 0;
+	return event.results[lastResultIndex][bestTranscriptionIndex].transcript;
+})
+.filter(function(transcript){	
+	return transcript.lastIndexOf("weer in") > -1// are we intersted in this?
+})
 /*
-	event.results.filter(function(transcriptionResult){
-		return transcriptionResult.
-
-	});
+ throttleWithTimeout only returns the last results after 20 ms. 
+ if we get multiple results quickly after eachother all will 
+ be ignored untill we have a 20ms silence on the events
 */
-	return transcript;
-})
-.filter(function(transcript){
-	// are we intersted in this?
-	return transcript.lastIndexOf("weer in") > -1
-})
-.throttleWithTimeout(20) // ms
+.throttleWithTimeout(20) //ms
 .map(function(transcript){
-	//extract city
+	/*
+		extract city from transcript by stripping 
+		everything before including the last 'weer in'.
+
+		Due to the fact that we are continuous listening 
+		it is possible that we get multiple recognitions 
+		within one transcript ('hoe is het weer in spanje hoe is het weer in amsterdam') thus the lastIndexOf.
+	*/
 	var city = transcript.substring(7 + transcript.lastIndexOf("weer in")).toLowerCase();
-	/* city = city.replace("wat", "");
-	city = city.replace("is", "");
-	city = city.replace("het", "");
-	city = city.replace("weer", "");
-	city = city.replace("in", "");*/
-	console.log('transcript', transcript, 'city:', city);
+	//console.log('transcript', transcript, 'city:', city);
 	return city.trim();
 })
 .filter(function(city){
 	return city != '';//no empty recognised 'weer in' strings
 })
 .distinctUntilChanged()//dont care about sequential amsterdams
-.throttleFirst(4000) // milliseconds
-.flatMap(getWeatherData) //get weather data
+.throttleFirst(4 * 1000) // do not give multiple hits if we ask them within seconds of eachother
+.flatMap(getWeatherData) //get weather data from API, return type of weather
 .subscribe(
 	function(weather){
 		console.log("weather:",weather);
@@ -110,7 +114,6 @@ function getWeatherData(city){
 			return "clouds";
 	});
 }
-
 
 $(document).ready(function(){
 	recognition.start();
