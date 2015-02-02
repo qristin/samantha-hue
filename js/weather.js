@@ -1,4 +1,5 @@
-var normalState;
+var bridgeIpAddress = '192.168.1.10';
+var bridgeUser = 'newdeveloper';
 
 function getRequest(url, callback) {
 	$.get(url, callback);
@@ -13,8 +14,9 @@ function putRequest(url,state) {
   });
 }
 
+var normalState;
 function getInitialLampState(){
-	var url = 'http://192.168.1.10/api/newdeveloper/lights/1'
+	var url = 'http://'+bridgeIpAddress+'/api/'+bridgeUser+'/lights/1'
 	getRequest(url, function(data) {
 		normalState = data;
 		console.log(data);
@@ -22,12 +24,12 @@ function getInitialLampState(){
 }
 
 function setLightGroup(state) {
-	var url = 'http://192.168.1.10/api/newdeveloper/groups/0/action'
+	var url = 'http://'+bridgeIpAddress+'/api/'+bridgeUser+'/groups/0/action'
 	return putRequest(url,state);
 }
 
 function setLightLamp(lamp,state) {
-	var url = 'http://192.168.1.10/api/newdeveloper/lights/' + lamp + '/state';
+	var url = 'http://'+bridgeIpAddress+'/api/'+bridgeUser+'/lights/' + lamp + '/state';
 	putRequest(url,state);	
 }
 
