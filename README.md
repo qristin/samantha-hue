@@ -15,3 +15,11 @@ If you have the Philips Hue hackaton kit at your disposal follow the connection 
 open index.html in your browser from a local webserver (for isntance, use the python oneliner `python -m SimpleHTTPServer 8080 .` to run one in the source folder)
 
 Say ["Hoe is het weer in Barcelona"](https://translate.google.com/#nl/en/Hoe%20is%20het%20weer%20in%20barcelona) with your best dutch accent.
+
+# Demo
+
+This is a short demo of the output for sunny Barcelona: [Youtube](https://www.youtube.com/watch?v=XCGF6LPfTuU)
+
+# License
+
+MIT
