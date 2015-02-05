@@ -1,5 +1,5 @@
-var bridgeIpAddress = '192.168.1.10';
-var bridgeUser = 'newdeveloper';
+var bridgeIpAddress = '192.168.1.101';
+var bridgeUser = 'aValidUser';
 
 function getRequest(url, callback) {
 	$.get(url, callback);
@@ -41,21 +41,21 @@ function setNormalState() {
 }
 
 function setCloudy(){
-	getLampState();
+	//getLampState();
 	var state = '{"on":true,"bri":5,"sat":110,"hue":47000}';
 	setLightGroup(state);
 	setTimeout(setNormalState,1500);
 }
 
 function setSunny(){
-	getLampState();
+	//getLampState();
 	var state = '{"on":true,"bri":200,"sat":170,"hue":12750}';
 	setLightGroup(state);
 	setTimeout(setNormalState,1000);
 }
 
 function setRainy() {
-	getLampState();
+	//getLampState();
 	var state = '{"on":true,"bri":120,"sat":190,"hue":46920}';
 	var lampStateA = '{"on":true,"bri":200,"sat":190,"hue":40000}';
 	var lampStateB = '{"on":true,"bri":10,"sat":190,"hue":46920}';
