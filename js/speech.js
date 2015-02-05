@@ -21,7 +21,7 @@ source.map(function(event){
 	var bestTranscriptionIndex = 0;
 	return event.results[lastResultIndex][bestTranscriptionIndex].transcript;
 })
-.filter(function(transcript){	
+.filter(function(transcript){
 	return transcript.lastIndexOf("weer in") > -1// are we intersted in this?
 })
 /*
@@ -39,6 +39,7 @@ source.map(function(event){
 		it is possible that we get multiple recognitions 
 		within one transcript ('hoe is het weer in spanje hoe is het weer in amsterdam') thus the lastIndexOf.
 	*/
+
 	var city = transcript.substring(7 + transcript.lastIndexOf("weer in")).toLowerCase();
 	//console.log('transcript', transcript, 'city:', city);
 	return city.trim();
@@ -75,6 +76,7 @@ source.map(function(event){
 
 recognition.onstart = function(){
 	console.log("starting to listen...");
+	setNormalState();
 };
 
 recognition.onerror = function(event){
